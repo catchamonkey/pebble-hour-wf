@@ -1,0 +1,19 @@
+{
+  "uuid": "e04cfab8-c1dc-47c7-9010-b1bbb1090516",
+  "shortName": "pebble-hour-wf",
+  "longName": "pebble-hour-wf",
+  "companyName": "catchamonkey",
+  "versionCode": 1,
+  "versionLabel": "1.0",
+  "sdkVersion": "3",
+  "targetPlatforms": ["aplite", "basalt"],
+  "watchapp": {
+    "watchface": true
+  },
+  "appKeys": {
+    "dummy": 0
+  },
+  "resources": {
+    "media": []
+  }
+}
