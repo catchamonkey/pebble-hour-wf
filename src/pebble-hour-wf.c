@@ -25,7 +25,8 @@ static void init() {
 }
 
 static void deinit() {
-
+  // Destroy Window
+  window_destroy(s_main_window);
 }
 
 int main(void) {
