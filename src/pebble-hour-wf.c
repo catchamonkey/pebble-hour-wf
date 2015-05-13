@@ -24,6 +24,9 @@ static void update_time() {
 
 static void tick_handler(struct tm *tick_time, TimeUnits units_changes) {
   update_time();
+  // update_bg();
+  // we could actually offer an option so you can choose how minutes are presented
+  // either 0-100% BG fill, or a radial 0-360 degrees, same way a minute hand does, but filling colour
 }
 
 static void main_window_load(Window *window) {
