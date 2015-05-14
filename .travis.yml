@@ -1,0 +1,4 @@
+language: pebblec
+sudo: true
+before_script: test/before_install.sh
+script: test/build.sh
