@@ -1,6 +1,7 @@
 #include <pebble.h>
 
 static Window *s_main_window;
+static Layer *s_canvas_layer;
 static TextLayer *s_time_layer;
 
 static void update_time() {
@@ -29,7 +30,36 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changes) {
   // either 0-100% BG fill, or a radial 0-360 degrees, same way a minute hand does, but filling colour
 }
 
+static void canvas_update_proc(Layer *this_layer, GContext *ctx) {
+  GRect bounds = layer_get_bounds(this_layer);
+
+  // Get the center of the screen (non full-screen)
+  GPoint center = GPoint(bounds.size.w / 2, (bounds.size.h / 2));
+
+  time_t temp = time(NULL);
+  struct tm *tick_time = localtime(&temp);
+
+  int minute = tick_time->tm_min;
+
+  // Draw a circle
+  graphics_context_set_fill_color(ctx, GColorFromRGB(0, 0, minute*3));
+  // graphics_fill_circle(ctx, center, 70);
+  graphics_fill_rect(ctx, GRect(0, 0, bounds.size.w/60*minute, bounds.size.h), 0, GCornerNone);
+  // GRect(xstart, ystart, xsize, ysize)
+}
+
 static void main_window_load(Window *window) {
+  // Get the root layer
+  Layer *window_layer = window_get_root_layer(window);
+  GRect window_bounds = layer_get_bounds(window_layer);
+
+  // Create Layer
+  s_canvas_layer = layer_create(GRect(0, 0, window_bounds.size.w, window_bounds.size.h));
+  layer_add_child(window_layer, s_canvas_layer);
+
+  // Set the update_proc
+  layer_set_update_proc(s_canvas_layer, canvas_update_proc);
+
   // Create time TextLayer
   s_time_layer = text_layer_create(GRect(0, 55, 144, 50));
   text_layer_set_background_color(s_time_layer, GColorClear);
@@ -39,7 +69,7 @@ static void main_window_load(Window *window) {
   text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
 
   // Add it as a child layer to the Window's root layer
-  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_time_layer));
+  layer_add_child(window_layer, text_layer_get_layer(s_time_layer));
 
   update_time();
 }
